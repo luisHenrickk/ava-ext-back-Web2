@@ -1,10 +1,11 @@
+import { Usuario } from 'src/usuario/entities/usuario.entity';
 import { Aluno } from 'src/aluno/entities/aluno.entity';
 import { Curso } from './entities/curso.entity';
 import { Injectable } from '@nestjs/common';
 import { CreateCursoDto } from './dto/create-curso.dto';
 import { UpdateCursoDto } from './dto/update-curso.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, ILike, Repository } from 'typeorm';
+import { Equal, FindManyOptions, ILike, Repository } from 'typeorm';
 import { RecordNotFoundException } from '@exceptions';
 import {
   IPaginationOptions,
@@ -33,6 +34,7 @@ export class CursoService {
   findAll(
     options: IPaginationOptions,
     search?: string,
+    user?: Usuario,
   ): Promise<Pagination<Curso>> {
     const where: FindManyOptions<Curso> = {};
     if (search) {
@@ -40,7 +42,7 @@ export class CursoService {
         { descricao: ILike(`%${search}%`) },
         { area: ILike(`%${search}%`) },
         { alunos: ILike(`%${search}%`) },
-        { professor: ILike(`%${search}%`) },
+        { professor: Equal(user) },
         { modulos: ILike(`%${search}%`) },
       ];
     }

@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -23,5 +24,10 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   login(@CurrentUsuario() usuario: Usuario) {
     return this.authService.login(usuario);
+  }
+
+  @Get('user')
+  getUser(@CurrentUsuario() user: Usuario) {
+    return user;
   }
 }

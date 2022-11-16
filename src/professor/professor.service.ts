@@ -30,18 +30,13 @@ export class ProfessorService {
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Professor>> {
-    const where: FindManyOptions<Professor> = {};
+    const where: FindOptionsWhere<Professor> = {};
+
     if (search) {
-      where.where = [
-        { nome: ILike(`%${search}%`) },
-        { cpf: ILike(`%${search}%`) },
-        { dataNasc: ILike(`%${search}%`) },
-        { telefones: ILike(`%${search}%`) },
-        { cursos: ILike(`%${search}%`) },
-      ];
+      where.nome = ILike(`%${search}%`);
     }
 
-    return paginate<Professor>(this.repository, options, where);
+    return paginate<Professor>(this.repository, options, { where });
   }
 
   async findOne(id: number): Promise<Professor> {

@@ -22,22 +22,17 @@ export class AvaliacaoService {
     return this.repository.save(avaliacao);
   }
 
-  findAll(
+  async findAll(
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Avaliacao>> {
-    const where: FindManyOptions<Avaliacao> = {};
+    const where: FindOptionsWhere<Avaliacao> = {};
+
     if (search) {
-      where.where = [
-        { metodoAvaliativo: ILike(`%${search}%`) },
-        { descricao: ILike(`%${search}%`) },
-        { questoes: ILike(`%${search}%`) },
-        { modulo: ILike(`%${search}%`) },
-        { aluno: ILike(`%${search}%`) },
-      ];
+      where.descricao = ILike(`%${search}%`);
     }
 
-    return paginate<Avaliacao>(this.repository, options, where);
+    return paginate<Avaliacao>(this.repository, options, { where });
   }
 
   async findOne(id: number) {

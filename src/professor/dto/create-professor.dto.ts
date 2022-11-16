@@ -67,8 +67,8 @@ export class CreateProfessorDto {
   @ValidateNested()
   @Type(() => RelationEntityDto)
   @IsArray()
-  @IsDefined()
-  telefones: Telefone[];
+  @IsOptional()
+  telefones?: Telefone[];
 
   @ValidateNested()
   @Type(() => RelationEntityDto)
@@ -79,6 +79,6 @@ export class CreateProfessorDto {
   @ValidateNested()
   @Type(() => RelationEntityDto)
   @IsArray()
-  @IsDefined()
-  certificados: Certificado[];
+  @IsOptional()
+  certificados?: Certificado[];
 }

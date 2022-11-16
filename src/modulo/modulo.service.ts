@@ -6,7 +6,7 @@ import {
   paginate,
   Pagination,
 } from 'nestjs-typeorm-paginate';
-import { FindManyOptions, ILike, Repository } from 'typeorm';
+import { FindManyOptions, FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { CreateModuloDto } from './dto/create-modulo.dto';
 import { UpdateModuloDto } from './dto/update-modulo.dto';
 import { Modulo } from './entities/modulo.entity';
@@ -22,22 +22,17 @@ export class ModuloService {
     return this.repository.save(modulo);
   }
 
-  findAll(
+  async findAll(
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Modulo>> {
-    const where: FindManyOptions<Modulo> = {};
+    const where: FindOptionsWhere<Modulo> = {};
+
     if (search) {
-      where.where = [
-        { descricao: ILike(`%${search}%`) },
-        { nivel: ILike(`%${search}%`) },
-        { curso: ILike(`%${search}%`) },
-        { avaliacoes: ILike(`%${search}%`) },
-        { aulas: ILike(`%${search}%`) },
-      ];
+      where.descricao = ILike(`%${search}%`);
     }
 
-    return paginate<Modulo>(this.repository, options, where);
+    return paginate<Modulo>(this.repository, options, { where });
   }
 
   async findOne(id: number) {

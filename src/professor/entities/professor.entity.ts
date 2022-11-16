@@ -23,7 +23,7 @@ export class Professor extends Usuario {
     eager: true,
     onDelete: 'CASCADE',
   })
-  telefones: Telefone[];
+  telefones?: Telefone[];
 
   @OneToMany(() => Curso, (curso) => curso.professor, {
     cascade: true,
@@ -36,5 +36,5 @@ export class Professor extends Usuario {
     eager: true,
     onDelete: 'CASCADE',
   })
-  certificados: Certificado[];
+  certificados?: Certificado[];
 }

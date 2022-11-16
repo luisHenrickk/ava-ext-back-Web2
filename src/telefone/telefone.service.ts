@@ -26,21 +26,17 @@ export class TelefoneService {
     return this.repository.save(telefone);
   }
 
-  findAll(
+  async findAll(
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Telefone>> {
-    const where: FindManyOptions<Telefone> = {};
+    const where: FindOptionsWhere<Telefone> = {};
+
     if (search) {
-      where.where = [
-        { tipo: ILike(`%${search}%`) },
-        { aluno: ILike(`%${search}%`) },
-        { telefone: ILike(`%${search}%`) },
-        { professor: ILike(`%${search}%`) },
-      ];
+      where.telefone = ILike(`%${search}%`);
     }
 
-    return paginate<Telefone>(this.repository, options, where);
+    return paginate<Telefone>(this.repository, options, { where });
   }
 
   async findOne(id: number) {

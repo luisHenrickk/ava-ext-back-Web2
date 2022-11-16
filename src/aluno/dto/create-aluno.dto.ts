@@ -63,8 +63,8 @@ export class CreateAlunoDto {
   @ValidateNested()
   @Type(() => RelationEntityDto)
   @IsArray()
-  @IsDefined()
-  telefones: Telefone[];
+  @IsOptional()
+  telefones?: Telefone[];
 
   @ValidateNested({ each: true })
   @Type(() => CreateCursoDto)

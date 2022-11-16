@@ -35,24 +35,17 @@ export class AlunoService {
     return result as Aluno;
   }
 
-  findAll(
+  async findAll(
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Aluno>> {
-    const where: FindManyOptions<Aluno> = {};
+    const where: FindOptionsWhere<Aluno> = {};
+
     if (search) {
-      where.where = [
-        { nome: ILike(`%${search}%`) },
-        { cpf: ILike(`%${search}%`) },
-        { dataNasc: ILike(`%${search}%`) },
-        { telefones: ILike(`%${search}%`) },
-        { cursos: ILike(`%${search}%`) },
-        { avaliacoes: ILike(`%${search}%`) },
-        { aulas: ILike(`%${search}%`) },
-      ];
+      where.nome = ILike(`%${search}%`);
     }
 
-    return paginate<Aluno>(this.repository, options, where);
+    return paginate<Aluno>(this.repository, options, { where });
   }
 
   async findOne(id: number): Promise<Aluno> {

@@ -30,22 +30,17 @@ export class AulaService {
     return this.repository.save(aula);
   }
 
-  findAll(
+  async findAll(
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Aula>> {
-    const where: FindManyOptions<Aula> = {};
+    const where: FindOptionsWhere<Aula> = {};
+
     if (search) {
-      where.where = [
-        { descricao: ILike(`%${search}%`) },
-        { duracao: ILike(`%${search}%`) },
-        { arquivos: ILike(`%${search}%`) },
-        { modulo: ILike(`%${search}%`) },
-        { alunos: ILike(`%${search}%`) },
-      ];
+      where.descricao = ILike(`%${search}%`);
     }
 
-    return paginate<Aula>(this.repository, options, where);
+    return paginate<Aula>(this.repository, options, { where });
   }
 
   async findOne(id: number) {

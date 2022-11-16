@@ -21,7 +21,7 @@ export class Aluno extends Usuario {
     eager: true,
     onDelete: 'CASCADE',
   })
-  telefones: Telefone[];
+  telefones?: Telefone[];
 
   @ManyToMany(() => Curso, (curso) => curso.alunos, {
     cascade: true,

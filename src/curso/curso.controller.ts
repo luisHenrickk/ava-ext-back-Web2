@@ -1,4 +1,3 @@
-import { Usuario } from 'src/usuario/entities/usuario.entity';
 import {
   Controller,
   Get,
@@ -13,7 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { CurrentUsuario, IsPublic } from 'src/shared/decorators';
+import { IsPublic } from 'src/shared/decorators';
 import { CursoService } from './curso.service';
 import { AddAlunoDto } from './dto/add-aluno.dto';
 import { CreateCursoDto } from './dto/create-curso.dto';
@@ -49,9 +48,8 @@ export class CursoController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
     @Query('search') search: string,
-    @CurrentUsuario() user: Usuario,
   ) {
-    return this.cursoService.findAll({ page, limit }, search, user);
+    return this.cursoService.findAll({ page, limit }, search);
   }
 
   @Get(':id')

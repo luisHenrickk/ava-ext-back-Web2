@@ -23,20 +23,17 @@ export class CertificadoService {
     return this.repository.save(certificado);
   }
 
-  findAll(
+  async findAll(
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Certificado>> {
-    const where: FindManyOptions<Certificado> = {};
+    const where: FindOptionsWhere<Certificado> = {};
+
     if (search) {
-      where.where = [
-        { areaCertificado: ILike(`%${search}%`) },
-        { link: ILike(`%${search}%`) },
-        { professor: ILike(`%${search}%`) },
-      ];
+      where.link = ILike(`%${search}%`);
     }
 
-    return paginate<Certificado>(this.repository, options, where);
+    return paginate<Certificado>(this.repository, options, { where });
   }
 
   async findOne(id: number): Promise<Certificado> {

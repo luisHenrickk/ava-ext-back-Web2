@@ -22,16 +22,17 @@ export class ArquivoService {
     return this.repository.save(arquivo);
   }
 
-  findAll(
+  async findAll(
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Arquivo>> {
-    const where: FindManyOptions<Arquivo> = {};
+    const where: FindOptionsWhere<Arquivo> = {};
+
     if (search) {
-      where.where = [{ aula: ILike(`%${search}%`) }];
+      where.descricao = ILike(`%${search}%`);
     }
 
-    return paginate<Arquivo>(this.repository, options, where);
+    return paginate<Arquivo>(this.repository, options, { where });
   }
 
   async findOne(id: number) {

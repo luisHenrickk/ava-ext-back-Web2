@@ -1,11 +1,10 @@
-import { Usuario } from 'src/usuario/entities/usuario.entity';
 import { Aluno } from 'src/aluno/entities/aluno.entity';
 import { Curso } from './entities/curso.entity';
 import { Injectable } from '@nestjs/common';
 import { CreateCursoDto } from './dto/create-curso.dto';
 import { UpdateCursoDto } from './dto/update-curso.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Equal, FindManyOptions, ILike, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { RecordNotFoundException } from '@exceptions';
 import {
   IPaginationOptions,
@@ -31,23 +30,17 @@ export class CursoService {
     return this.repository.save(curso);
   }
 
-  findAll(
+  async findAll(
     options: IPaginationOptions,
     search?: string,
-    user?: Usuario,
   ): Promise<Pagination<Curso>> {
-    const where: FindManyOptions<Curso> = {};
+    const where: FindOptionsWhere<Curso> = {};
+
     if (search) {
-      where.where = [
-        { descricao: ILike(`%${search}%`) },
-        { area: ILike(`%${search}%`) },
-        { alunos: ILike(`%${search}%`) },
-        { professor: Equal(user) },
-        { modulos: ILike(`%${search}%`) },
-      ];
+      where.descricao = ILike(`%${search}%`);
     }
 
-    return paginate<Curso>(this.repository, options, where);
+    return paginate<Curso>(this.repository, options, { where });
   }
 
   async findOne(id: number) {

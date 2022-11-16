@@ -25,6 +25,7 @@ export class Modulo {
 
   @ManyToOne(() => Curso, (curso) => curso.modulos, {
     onDelete: 'CASCADE',
+    eager: true,
   })
   curso: Curso;
 

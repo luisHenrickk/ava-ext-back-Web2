@@ -58,6 +58,14 @@ export class AlunoService {
     return aluno;
   }
 
+  async findByCurso(idCurso: number): Promise<Aluno[]> {
+    const user = await this.repository
+      .createQueryBuilder('aluno')
+      .where('aluno.curso.id = :idCurso', { idCurso })
+      .getMany();
+    return user;
+  }
+
   async update(id: number, updateAlunoDto: UpdateAlunoDto): Promise<Aluno> {
     await this.repository.update(id, updateAlunoDto);
     const user = await this.repository.findOneBy({ id });

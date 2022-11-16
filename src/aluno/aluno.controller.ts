@@ -48,6 +48,12 @@ export class AlunoController {
     return this.alunoService.findOne(id);
   }
 
+  @Get('/curso/:id')
+  @Roles(Role.Admin, Role.Professor)
+  findByCurso(@Param('id', ParseIntPipe) id: number) {
+    return this.alunoService.findByCurso(id);
+  }
+
   @Patch(':id')
   @IsPublic()
   update(

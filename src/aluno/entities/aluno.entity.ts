@@ -25,7 +25,6 @@ export class Aluno extends Usuario {
 
   @ManyToMany(() => Curso, (curso) => curso.alunos, {
     cascade: true,
-    eager: true,
     onDelete: 'CASCADE',
   })
   @JoinTable({ name: 'cursos_alunos' })

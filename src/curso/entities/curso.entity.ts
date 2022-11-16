@@ -24,6 +24,7 @@ export class Curso {
 
   @ManyToMany(() => Aluno, (aluno) => aluno.cursos, {
     onDelete: 'CASCADE',
+    eager: true,
   })
   @JoinTable({ name: 'cursos_alunos' })
   alunos?: Aluno[];
@@ -36,7 +37,6 @@ export class Curso {
 
   @OneToMany(() => Modulo, (modulo) => modulo.curso, {
     cascade: true,
-    eager: true,
     onDelete: 'CASCADE',
   })
   modulos?: Modulo[];

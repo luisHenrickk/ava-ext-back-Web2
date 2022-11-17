@@ -30,13 +30,15 @@ export class TelefoneService {
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Telefone>> {
-    const where: FindOptionsWhere<Telefone> = {};
-
+    const where: FindManyOptions<Telefone> = {};
     if (search) {
-      where.telefone = ILike(`%${search}%`);
+      where.where = [
+        { telefone: ILike(`%${search}%`) },
+        { tipo: ILike(`%${search}%`) },
+      ];
     }
 
-    return paginate<Telefone>(this.repository, options, { where });
+    return paginate<Telefone>(this.repository, options, where);
   }
 
   async findOne(id: number) {

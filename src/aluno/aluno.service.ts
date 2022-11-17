@@ -8,7 +8,7 @@ import {
 } from 'nestjs-typeorm-paginate';
 import { Aula } from 'src/aula/entities/aula.entity';
 import { Curso } from 'src/curso/entities/curso.entity';
-import { FindManyOptions, FindOptionsWhere, ILike, Repository } from 'typeorm';
+import { FindManyOptions, ILike, Repository } from 'typeorm';
 import { CreateAlunoDto } from './dto/create-aluno.dto';
 import { UpdateAlunoDto } from './dto/update-aluno.dto';
 import { Aluno } from './entities/aluno.entity';
@@ -39,13 +39,15 @@ export class AlunoService {
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Aluno>> {
-    const where: FindOptionsWhere<Aluno> = {};
-
+    const where: FindManyOptions<Aluno> = {};
     if (search) {
-      where.nome = ILike(`%${search}%`);
+      where.where = [
+        { nome: ILike(`%${search}%`) },
+        { cpf: ILike(`%${search}%`) },
+      ];
     }
 
-    return paginate<Aluno>(this.repository, options, { where });
+    return paginate<Aluno>(this.repository, options, where);
   }
 
   async findOne(id: number): Promise<Aluno> {

@@ -27,13 +27,15 @@ export class CertificadoService {
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Certificado>> {
-    const where: FindOptionsWhere<Certificado> = {};
-
+    const where: FindManyOptions<Certificado> = {};
     if (search) {
-      where.link = ILike(`%${search}%`);
+      where.where = [
+        { areaCertificado: ILike(`%${search}%`) },
+        { link: ILike(`%${search}%`) },
+      ];
     }
 
-    return paginate<Certificado>(this.repository, options, { where });
+    return paginate<Certificado>(this.repository, options, where);
   }
 
   async findOne(id: number): Promise<Certificado> {

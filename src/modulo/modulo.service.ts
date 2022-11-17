@@ -26,13 +26,15 @@ export class ModuloService {
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Modulo>> {
-    const where: FindOptionsWhere<Modulo> = {};
-
+    const where: FindManyOptions<Modulo> = {};
     if (search) {
-      where.descricao = ILike(`%${search}%`);
+      where.where = [
+        { descricao: ILike(`%${search}%`) },
+        { nivel: ILike(`%${search}%`) },
+      ];
     }
 
-    return paginate<Modulo>(this.repository, options, { where });
+    return paginate<Modulo>(this.repository, options, where);
   }
 
   async findOne(id: number) {

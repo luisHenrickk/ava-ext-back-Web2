@@ -1,10 +1,17 @@
+import { RelationEntityDto } from 'src/shared/dto/relation-entity.dto';
 import { Aluno } from 'src/aluno/entities/aluno.entity';
 import { Curso } from './entities/curso.entity';
 import { Injectable } from '@nestjs/common';
 import { CreateCursoDto } from './dto/create-curso.dto';
 import { UpdateCursoDto } from './dto/update-curso.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, ILike, Repository } from 'typeorm';
+import {
+  Equal,
+  FindManyOptions,
+  FindOptionsWhere,
+  ILike,
+  Repository,
+} from 'typeorm';
 import { RecordNotFoundException } from '@exceptions';
 import {
   IPaginationOptions,
@@ -13,6 +20,7 @@ import {
 } from 'nestjs-typeorm-paginate';
 import { AddAlunoDto } from './dto/add-aluno.dto';
 import { AlunoService } from 'src/aluno/aluno.service';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
 
 @Injectable()
 export class CursoService {
@@ -34,13 +42,15 @@ export class CursoService {
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Curso>> {
-    const where: FindOptionsWhere<Curso> = {};
-
+    const where: FindManyOptions<Curso> = {};
     if (search) {
-      where.descricao = ILike(`%${search}%`);
+      where.where = [
+        { descricao: ILike(`%${search}%`) },
+        { area: ILike(`%${search}%`) },
+      ];
     }
 
-    return paginate<Curso>(this.repository, options, { where });
+    return paginate<Curso>(this.repository, options, where);
   }
 
   async findOne(id: number) {
@@ -73,16 +83,22 @@ export class CursoService {
     return true;
   }
 
-  async addAluno(id: number, addAlunoDto: AddAlunoDto): Promise<Curso> {
+  async addAluno(
+    id: number,
+    relationEntityDto: RelationEntityDto,
+  ): Promise<Curso> {
     const curso = await this.findOne(id);
     if (!curso.alunos) {
       curso.alunos = [];
     }
 
-    for (let i = 0; i < addAlunoDto.alunos.length; i++) {
-      const aux = await this.alunoService.findOne(addAlunoDto.alunos[i].id);
-      curso.alunos.push(aux);
+    const aluno = await this.alunoRepository.findOneBy({
+      id: relationEntityDto.id,
+    });
+    if (!aluno) {
+      throw new RecordNotFoundException();
     }
+    curso.alunos.push(aluno);
 
     return this.repository.save(curso);
   }

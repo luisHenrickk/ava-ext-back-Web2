@@ -26,13 +26,15 @@ export class QuestaoService {
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Questao>> {
-    const where: FindOptionsWhere<Questao> = {};
-
+    const where: FindManyOptions<Questao> = {};
     if (search) {
-      where.enunciado = ILike(`%${search}%`);
+      where.where = [
+        { enunciado: ILike(`%${search}%`) },
+        { resposta: ILike(`%${search}%`) },
+      ];
     }
 
-    return paginate<Questao>(this.repository, options, { where });
+    return paginate<Questao>(this.repository, options, where);
   }
 
   async findOne(id: number) {

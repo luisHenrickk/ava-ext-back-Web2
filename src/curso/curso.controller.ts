@@ -1,3 +1,4 @@
+import { RelationEntityDto } from 'src/shared/dto/relation-entity.dto';
 import {
   Controller,
   Get,
@@ -12,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { IsPublic } from 'src/shared/decorators';
+import { CurrentUsuario, IsPublic } from 'src/shared/decorators';
 import { CursoService } from './curso.service';
 import { AddAlunoDto } from './dto/add-aluno.dto';
 import { CreateCursoDto } from './dto/create-curso.dto';
@@ -20,6 +21,7 @@ import { UpdateCursoDto } from './dto/update-curso.dto';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/shared/decorators/roles.decorator';
 import { Role } from 'src/shared/enums/role.enum';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
 
 @ApiTags('Curso')
 @Controller('curso')
@@ -37,9 +39,9 @@ export class CursoController {
   @Roles(Role.Admin)
   addAluno(
     @Param('id', ParseIntPipe) id: number,
-    @Body() addAlunoDto: AddAlunoDto,
+    @Body() relationEntityDtio: RelationEntityDto,
   ) {
-    return this.cursoService.addAluno(id, addAlunoDto);
+    return this.cursoService.addAluno(id, relationEntityDtio);
   }
 
   @Get()

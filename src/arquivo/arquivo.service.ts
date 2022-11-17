@@ -6,7 +6,7 @@ import {
   paginate,
   Pagination,
 } from 'nestjs-typeorm-paginate';
-import { FindManyOptions, FindOptionsWhere, ILike, Repository } from 'typeorm';
+import { Equal, FindManyOptions, ILike, Repository } from 'typeorm';
 import { CreateArquivoDto } from './dto/create-arquivo.dto';
 import { UpdateArquivoDto } from './dto/update-arquivo.dto';
 import { Arquivo } from './entities/arquivo.entity';
@@ -26,13 +26,12 @@ export class ArquivoService {
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Arquivo>> {
-    const where: FindOptionsWhere<Arquivo> = {};
-
+    const where: FindManyOptions<Arquivo> = {};
     if (search) {
-      where.descricao = ILike(`%${search}%`);
+      where.where = [{ descricao: ILike(`%${search}%`) }];
     }
 
-    return paginate<Arquivo>(this.repository, options, { where });
+    return paginate<Arquivo>(this.repository, options, where);
   }
 
   async findOne(id: number) {

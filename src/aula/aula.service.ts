@@ -34,13 +34,15 @@ export class AulaService {
     options: IPaginationOptions,
     search?: string,
   ): Promise<Pagination<Aula>> {
-    const where: FindOptionsWhere<Aula> = {};
-
+    const where: FindManyOptions<Aula> = {};
     if (search) {
-      where.descricao = ILike(`%${search}%`);
+      where.where = [
+        { descricao: ILike(`%${search}%`) },
+        { duracao: ILike(`%${search}%`) },
+      ];
     }
 
-    return paginate<Aula>(this.repository, options, { where });
+    return paginate<Aula>(this.repository, options, where);
   }
 
   async findOne(id: number) {
